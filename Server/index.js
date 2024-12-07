@@ -31,10 +31,11 @@ app.use("/user", userRoute);
 app.use("/user", userRoute)
 
 // MongoDB connection and server start
+const PORT=process.env.PORT || 8000;
 const startServer = async () => {
   await MongoConnect();
-  server.listen(process.env.PORT, () => {
-    console.log(`Server started at port ${process.env.PORT}`);
+  server.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`);
   });
 };
 
