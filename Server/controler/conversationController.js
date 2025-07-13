@@ -2,6 +2,8 @@ const conversationModel = require("../Models/conversation");
 const messageModel = require("../Models/message");
 const mongoose = require("mongoose");
 const {getReceiverSocketId,io}=require ('../socket/socket')
+
+
 const sendMessage = async (req, res) => {
   const { message } = req.body;
   const { id: reciverId } = req.params;
@@ -27,10 +29,8 @@ const sendMessage = async (req, res) => {
   if (newmessage) {
     conversation.messages.push(newmessage._id);
   }
-  await Promise.all([newmessage.save(), conversation.save()]); //this will work parrelly
-  // we will implement socket.io here
-  // await newmessage.save();
-  // await conversation.save()
+  await Promise.all([newmessage.save(), conversation.save()]);
+ 
   const receiverSocketId=getReceiverSocketId(reciverId)
   if(receiverSocketId){
     io.to(receiverSocketId).emit("newmessage",newmessage)
@@ -46,8 +46,7 @@ const getMessage = async (req, res) => {
   try {
     const { id: chatWith } = req.params;
     const senderId = req.user._id;
-    // console.log(chatWith, senderId)
-    // const chatwithId= new mongoose.Types.ObjectId(chatWith);
+    
     const conversation = await conversationModel
       .findOne({
         participant: { $all: [senderId, chatWith] },

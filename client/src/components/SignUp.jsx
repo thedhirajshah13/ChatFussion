@@ -9,13 +9,15 @@ const SignUp = () => {
   const { setAuth } = useAuthContext();
   const [loading, setloading] = useState(false);
   const [register, setRegister] = useState({});
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleRegister = (e) => {
     setRegister({ ...register, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(register)
+
     const form = new FormData();
     form.append("name", register.name);
     form.append("username", register.username);
@@ -31,178 +33,161 @@ const SignUp = () => {
         form,
         {
           method: "POST",
-          // Include cookies
-
           withCredentials: true,
         }
       );
 
-      // console.log(response.data.token);
-      const data = response.data;
-
       if (response.status === 201) {
-        // const data = response.data;
-        success(data.msg);
+        success(response.data.msg);
 
         setTimeout(() => {
-          localStorage.setItem("chat-user", JSON.stringify(data));
+          localStorage.setItem("chat-user", JSON.stringify(response.data));
           setAuth(response);
-          setRegister("");
-          Navigate("/login");
+          setRegister({});
+          navigate("/login");
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
-      // const data = response.data;
-      errors(error.response.data.msg);
+      console.error(error);
+      errors(error?.response?.data?.msg || "Signup failed");
     } finally {
       setloading(false);
     }
   };
-  console.log(register);
+
   return (
     <>
       {loading ? (
-        <div></div>
+        <div className="flex justify-center items-center min-h-screen text-white text-xl">
+          Processing...
+        </div>
       ) : (
-        <div
-          className="min-h-screen bg-cover bg-center flex items-center justify-center relative"
-          // Replace with the correct image path
-        >
-          {/* This div covers the background image with a slight overlay */}
-          <div className="absolute inset-0 bg-black/10"></div>
+        <div className="min-h-screen flex items-center justify-center relative">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 z-[-2] bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: 'url("http://localhost:3000/bgo.webp")' }}
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/40 z-[-1]" />
 
-          <div className=" bg-fuchsia-700 bg-opacity-10  rounded-lg  w-full max-w-md border border-white/50 z-30 relative backdrop-blur-sm p-8 shadow-lg">
+          {/* SignUp Form */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg w-full max-w-md border border-white/30 p-4 sm:p-8 shadow-lg z-10">
             <h2 className="text-2xl font-bold text-center mb-6 text-white">
               Sign Up
             </h2>
-            <form className="space-y-4  " onSubmit={handleSubmit}>
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              {/* Name */}
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-white"
-                >
+                <label htmlFor="name" className="block text-sm font-medium text-white">
                   Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20 text-white placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full mt-1 p-2 rounded-md bg-white/20 text-white placeholder-white/70 border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="John Doe"
                   required
                   onChange={handleRegister}
                 />
               </div>
 
+              {/* Username / Email */}
               <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-white"
-                >
-                  Email
+                <label htmlFor="username" className="block text-sm font-medium text-white">
+                  Username
                 </label>
                 <input
-                  type="username"
+                  type="text"
+                  id="username"
                   name="username"
-                  id="email"
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20 text-white placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full mt-1 p-2 rounded-md bg-white/20 text-white placeholder-white/70 border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="abc123"
                   required
                   onChange={handleRegister}
                 />
               </div>
 
+              {/* Password */}
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-white"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-white">
                   Password
                 </label>
                 <input
                   type="password"
-                  name="password"
                   id="password"
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20 text-white placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
+                  name="password"
+                  className="w-full mt-1 p-2 rounded-md bg-white/20 text-white placeholder-white/70 border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="********"
                   required
                   onChange={handleRegister}
                 />
               </div>
 
+              {/* Confirm Password */}
               <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-white"
-                >
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
                   Confirm Password
                 </label>
                 <input
                   type="password"
-                  name="confirmPassword"
                   id="confirmPassword"
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20 text-white placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
+                  name="confirmPassword"
+                  className="w-full mt-1 p-2 rounded-md bg-white/20 text-white placeholder-white/70 border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="********"
                   required
                   onChange={handleRegister}
                 />
               </div>
+
+              {/* Gender */}
               <div>
-                <label
-                  htmlFor="Gender"
-                  className="block text-sm font-medium text-white"
-                >
+                <label htmlFor="gender" className="block text-sm font-medium text-white">
                   Gender
                 </label>
                 <select
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20  placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="********"
+                  name="gender"
+                  id="gender"
+                  className="w-full mt-1 p-2 rounded-md bg-gray-800 text-white border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   required
                   onChange={handleRegister}
-                  name="gender"
                 >
-                  {" "}
-                  <option>select Gender</option>
+                  <option value="">Select Gender</option>
                   <option value="male">Male</option>
-                  <option value="female">female</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
+
+              {/* Profile Image */}
               <div>
-                <label
-                  htmlFor="Gender"
-                  className="block text-sm font-medium text-white"
-                >
-                  Profile image
+                <label htmlFor="file" className="block text-sm font-medium text-white">
+                  Profile Image
                 </label>
                 <input
                   type="file"
                   name="file"
-                  onChange={(e) => {
-                    setRegister({ ...register, file: e.target.files[0] });
-                  }}
-                  className="w-full p-2 mt-1 border rounded-md bg-white/20  placeholder-white/70 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="********"
+                  id="file"
+                  className="w-full mt-1 p-2 rounded-md bg-white/20 text-white border focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  onChange={(e) => setRegister({ ...register, file: e.target.files[0] })}
                 />
               </div>
-              <div className="">
-                <Link
-                  to="/login"
-                  className="block text-sm font-medium text-white"
-                >
-                  Already have an Account ?{" "}
-                  <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    {" "}
-                    click here
-                  </span>
+
+              {/* Link to login */}
+              <div className="text-sm text-white">
+                Already have an account?{" "}
+                <Link to="/login" className="text-blue-400 hover:underline">
+                  Click here
                 </Link>
               </div>
 
+              {/* Submit Button */}
               <div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="w-full px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   Sign Up
                 </button>

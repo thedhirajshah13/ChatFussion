@@ -8,8 +8,7 @@ const Signup = async (req, res) => {
   try {
     const { name, username, password, confirmPassword, gender, profileImg } =
       req.body;
-    // console.log(name, username, password, confirmPassword, gender, profileImg);
-    // console.log(req.file);
+    
     const userAlreadyExists = await userModel.findOne({ username });
 
     if (userAlreadyExists) {
@@ -27,7 +26,7 @@ const Signup = async (req, res) => {
 
     //  Hashed password
     const salt = await bcrypt.genSalt(10);
-    // console.log(salt);
+    
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new userModel({
@@ -65,7 +64,7 @@ const Signup = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    // console.log(username, password)
+    
     const isUser = await userModel.findOne({ username });
 
     if (!isUser) {
