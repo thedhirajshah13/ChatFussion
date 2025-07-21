@@ -22,7 +22,7 @@ app.use(
 // Middleware
 app.use(cookieParser()); // Use cookie-parser before the routes
 app.use(express.json()); // Use express.json() before the routes
-app.use("/uploads", express.static("uploads")); // use to server image in frontend with url->http://localhost:8000/
+app.use("/uploads", express.static("uploads")); // use to server image in frontend with url->https://chatfussion.onrender.com/
 
 // Routes
 app.use("/auth", authRouter);

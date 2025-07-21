@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const userModel = require("../Models/userModels");
 const generateToken = require("../utils/generateToken");
@@ -34,7 +34,7 @@ const Signup = async (req, res) => {
       username,
       password: hashedPassword,
       gender,
-      profileImg: `http://localhost:8000/uploads/${req.file.filename}`,
+      profileImg: `https://chatfussion.onrender.com/uploads/${req.file.filename}`,
     });
 
     if (newUser) {
